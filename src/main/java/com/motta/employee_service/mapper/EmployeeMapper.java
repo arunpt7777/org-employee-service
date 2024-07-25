@@ -17,8 +17,8 @@ public class EmployeeMapper {
 	// Convert EmployeeDTO into Employee JPA Entity
 	public static Employee mapToEmployee(EmployeeDTO employeeDTO) {
 		Employee employee = new Employee(employeeDTO.getId(), employeeDTO.getEmployeeNumber(), employeeDTO.getAge(),
-				employeeDTO.getFirstName(), employeeDTO.getLastName(), employeeDTO.getEmail(), employeeDTO.getPhone(),
-				employeeDTO.getGender(), employeeDTO.getSalaryId(), employeeDTO.getAddresses(),
+				employeeDTO.getFirstName(), employeeDTO.getLastName(), employeeDTO.getGender(), employeeDTO.getEmail(),
+				employeeDTO.getPhone(), employeeDTO.getSalaryId(), employeeDTO.getAddresses(),
 				employeeDTO.getCreatedAt(), employeeDTO.getModifiedAt());
 		return employee;
 	}
