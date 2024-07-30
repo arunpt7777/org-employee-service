@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +25,10 @@ import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
+@Slf4j
 public class EmployeeServiceImplementation implements EmployeeService {
 
+	private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImplementation.class);
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
@@ -46,6 +51,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		 * EmployeeHasDuplicateAddressesException("Employee cannot have duplicate Addresses"
 		 * ); }
 		 */
+
 		// Convert EmployeeDTO into User JPA Entity
 		Employee newEmployee = EmployeeMapper.mapToEmployee(employeeDTO);
 		Employee savedEmployee = employeeRepository.save(newEmployee);
@@ -75,10 +81,15 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 	@Override
 	public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) {
-		Employee existingEmployee = employeeRepository.findById(employeeDTO.getId()).get();
-		if (existingEmployee == null)
+		log.info("Update Employee: {}, id:{} ", employeeDTO, employeeDTO.getId());
+		Employee existingEmployee = employeeRepository.findById(employeeDTO.getId());
+
+		if (existingEmployee == null) {
+            log.error("Employee id = {} not found. Please enter different id", employeeDTO.getId());
+			log.debug("Employee id = {} not found. Please enter different id", employeeDTO.getId());
 			throw new EmployeeNotFoundException(
 					"Employee id = " + employeeDTO.getId() + " not found. Please enter different id");
+		}
 
 		existingEmployee.setAge(employeeDTO.getAge());
 		existingEmployee.setEmail(employeeDTO.getEmail());

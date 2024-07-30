@@ -10,6 +10,8 @@ import com.motta.employee_service.entity.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
+	Employee findById(Integer id);
+
 	@Query(nativeQuery = true, value = "SELECT * FROM employee_management.employee e WHERE e.age <= :age AND e.gender=:gender")
 	List<Employee> findEmployeeByGenderUsingNativeQuery(@Param("age") int age, @Param("gender") String gender);
 
