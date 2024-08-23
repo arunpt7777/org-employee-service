@@ -18,4 +18,5 @@ public interface AddressService {
 
 	List<AddressDTO> retrieveAllAddressesByType(String type);
 
+	void validateAddressDTO(AddressDTO addressDTO);
 }

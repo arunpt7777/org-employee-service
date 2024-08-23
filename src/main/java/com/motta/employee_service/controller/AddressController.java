@@ -19,7 +19,7 @@ import com.motta.employee_service.service.AddressService;
 
 import jakarta.validation.Valid;
 
-@RestController
+@RestController("address_controller")
 public class AddressController {
 
 	@Autowired

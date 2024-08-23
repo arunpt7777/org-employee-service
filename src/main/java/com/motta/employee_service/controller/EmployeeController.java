@@ -19,7 +19,7 @@ import com.motta.employee_service.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
-@RestController
+@RestController("employee_controller")
 public class EmployeeController {
 
 	@Autowired

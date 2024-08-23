@@ -20,4 +20,5 @@ public interface EmployeeService {
 
 	List<EmployeeDTO> findEmployeeByGenderUsingNativeQuery(Integer age, String gender);
 
+	void validateEmployeeDTO(EmployeeDTO employeeDTO);
 }
