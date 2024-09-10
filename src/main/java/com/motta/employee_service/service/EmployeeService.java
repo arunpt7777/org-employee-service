@@ -3,6 +3,7 @@ package com.motta.employee_service.service;
 import java.util.List;
 
 import com.motta.employee_service.model.EmployeeDTO;
+import com.motta.employee_service.model.ServiceCheckDTO;
 
 public interface EmployeeService {
 
@@ -21,4 +22,6 @@ public interface EmployeeService {
 	List<EmployeeDTO> findEmployeeByGenderUsingNativeQuery(Integer age, String gender);
 
 	void validateEmployeeDTO(EmployeeDTO employeeDTO);
+
+	List<ServiceCheckDTO> retrieveAllServices();
 }

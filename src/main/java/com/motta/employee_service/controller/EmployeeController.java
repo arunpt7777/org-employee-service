@@ -2,6 +2,7 @@ package com.motta.employee_service.controller;
 
 import java.util.List;
 
+import com.motta.employee_service.model.ServiceCheckDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,7 @@ public class EmployeeController {
 		return new ResponseEntity<>(employees, HttpStatus.OK);
 	}
 
+
 	// Update Employee REST API
 	@PutMapping("/employees/{id}")
 	public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable("id") Integer id,
@@ -92,6 +94,13 @@ public class EmployeeController {
 			@PathVariable("gender") String gender) {
 		List<EmployeeDTO> employees = employeeService.findEmployeeByGenderUsingNativeQuery(age, gender);
 		return new ResponseEntity<>(employees, HttpStatus.OK);
+	}
+
+	// Check if employee service is up or not
+	@GetMapping("/employeeservicecheck")
+	public ResponseEntity<List<ServiceCheckDTO>> checkEmployeeService() {
+		List<ServiceCheckDTO> services = employeeService.retrieveAllServices();
+		return new ResponseEntity<>(services, HttpStatus.OK);
 	}
 
 }

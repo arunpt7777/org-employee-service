@@ -2,7 +2,12 @@ package com.motta.employee_service.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.motta.employee_service.entity.ServiceCheck;
 import com.motta.employee_service.exception.*;
+import com.motta.employee_service.mapper.ServiceCheckMapper;
+import com.motta.employee_service.model.ServiceCheckDTO;
+import com.motta.employee_service.repository.ServiceCheckRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,9 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	@Autowired
 	private EmployeeMapper employeeMapper;
 
+	@Autowired
+	private ServiceCheckMapper serviceCheckMapper;
+
 	@Value("${employee.id.initialValue}")
 	private Integer initialValueOfPrimaryKey;
 
@@ -43,7 +51,11 @@ public class EmployeeServiceImplementation implements EmployeeService {
 	private Integer employeeMaxAge;
 
 	@Autowired
-	private EmployeeRepository repository;
+	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	private ServiceCheckRepository serviceCheckRepository;
+
 
 	@Autowired
 	private AddressService addressService;
@@ -56,13 +68,13 @@ public class EmployeeServiceImplementation implements EmployeeService {
 		validateEmployeeDTO(employeeDTO);
 
 	// CHeck if id already exists
-	Employee employee = repository.findById(employeeDTO.getId()).orElse(null);
+	Employee employee = employeeRepository.findById(employeeDTO.getId()).orElse(null);
 		if (employee == null) {
 		throw new EmployeeAlreadyExistsException(EXCEPTION_MESSAGE_EMPLOYEE_NOT_FOUND);
 	}
 
 	Employee newEmployee = employeeMapper.mapToEmployee(employeeDTO);
-	Employee savedEmployee = repository.save(newEmployee);
+	Employee savedEmployee = employeeRepository.save(newEmployee);
 		log.info(LOG_MESSAGE_EMPLOYEE_PERSISTED, employeeDTO.getId());
 
 	// Convert Employee JPA entity to EmployeeDTO
@@ -71,7 +83,7 @@ public class EmployeeServiceImplementation implements EmployeeService {
 
 @Override
 public EmployeeDTO retrieveEmployeeById(Integer id) {
-	Employee employee = repository.findById(id).orElse(null);
+	Employee employee = employeeRepository.findById(id).orElse(null);
 	assert employee != null;
 	EmployeeDTO employeeDTO = new EmployeeDTO();
 	BeanUtils.copyProperties(employee, employeeDTO);
@@ -80,7 +92,7 @@ public EmployeeDTO retrieveEmployeeById(Integer id) {
 
 @Override
 public List<EmployeeDTO> retrieveAllEmployees() {
-	List<Employee> employees = repository.findAll();
+	List<Employee> employees = employeeRepository.findAll();
 	return employees.stream().map(employeeMapper::mapEmployeeDTO).toList();
 }
 
@@ -90,9 +102,9 @@ public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) {
 	// Check if From and To Dates are valid
 	validateEmployeeDTO(employeeDTO);
 
-	Employee existingEmployee = repository.findById(employeeDTO.getId()).orElse(new Employee());
+	Employee existingEmployee = employeeRepository.findById(employeeDTO.getId()).orElse(new Employee());
 	BeanUtils.copyProperties(existingEmployee, employeeDTO);
-	Employee updatedEmployee = repository.save(existingEmployee);
+	Employee updatedEmployee = employeeRepository.save(existingEmployee);
 	log.error(LOG_MESSAGE_EMPLOYEE_UPDATE_FAILED, existingEmployee.getId());
 	return employeeMapper.mapEmployeeDTO(updatedEmployee);
 }
@@ -106,19 +118,19 @@ public void deleteEmployee(Integer id) {
 		throw new AddressNotFoundException(EXCEPTION_MESSAGE_EMPLOYEE_ADDRESSES_NOT_FOUND);
 	}
 	addresses.forEach(address -> addressService.deleteAddress(address.getId())); // delete foreign key referenced addresses
-	repository.deleteById(id);
+	employeeRepository.deleteById(id);
 }
 
 	@Override
 	public List<EmployeeDTO> retrieveAllEmployeesByGender(String gender) {
-		List<Employee> employees = repository.findAll();
+		List<Employee> employees = employeeRepository.findAll();
 		return employees.stream().filter(emp -> emp.getGender().equalsIgnoreCase(gender))
 				.map(employeeMapper::mapEmployeeDTO).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<EmployeeDTO> findEmployeeByGenderUsingNativeQuery(Integer age, String gender) {
-		List<Employee> employeesByGender = repository.findEmployeeByGenderUsingNativeQuery(age, gender);
+		List<Employee> employeesByGender = employeeRepository.findEmployeeByGenderUsingNativeQuery(age, gender);
 		return employeesByGender.stream().map(employeeMapper::mapEmployeeDTO).toList();
 	}
 
@@ -162,4 +174,11 @@ public void deleteEmployee(Integer id) {
 			throw new InvalidEmployeeException(EXCEPTION_MESSAGE_SALARY_ID_IS_MANDATORY);
 		}
 	}
+
+	@Override
+	public List<ServiceCheckDTO> retrieveAllServices() {
+		List<ServiceCheck> services = serviceCheckRepository.findAll();
+		return services.stream().map(serviceCheckMapper::mapServiceCheckDTO).toList();
+	}
+
 }
