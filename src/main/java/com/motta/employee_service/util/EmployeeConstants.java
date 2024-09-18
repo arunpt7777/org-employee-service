@@ -20,5 +20,5 @@ public class EmployeeConstants {
 
     public static final String URL_GET_ASSOCIATIONS_BY_EMPLOYEE_ID = "http://localhost:8900/getassociationsbyschemeid/";
 
-
+    public static final String SPRING_BATCH_FILE_DELIMITER = ",";
 }

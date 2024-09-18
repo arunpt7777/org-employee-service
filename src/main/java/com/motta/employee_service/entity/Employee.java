@@ -31,14 +31,30 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Custom_Sequence")
 	private int id;
+
+	@Column(name = "EMPLOYEE_NUMBER")
 	private int employeeNumber;
+
+	@Column(name = "AGE")
 	private int age;
+
+	@Column(name = "FIRST_NAME")
 	private String firstName;
+
+	@Column(name = "LAST_NAME")
 	private String lastName;
+
+	@Column(name = "GENDER")
 	private String gender;
+
+	@Column(name = "EMAIL")
 	private String email;
+
+	@Column(name = "PHONE")
 	@Pattern(regexp = "(^$|[0-9]{10})")
 	private String phone;
+
+	@Column(name = "SALARY_ID")
 	private int salaryId;
 
 	@Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
